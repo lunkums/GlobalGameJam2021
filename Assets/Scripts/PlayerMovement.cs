@@ -11,6 +11,9 @@ public class PlayerMovement : MonoBehaviour
     
     public float minJumpHeight = 2f;
     public float maxJumpHeight = 10f;
+    /*public float minJumpDistance = 2f;
+    public float maxJumpDistance = 10f;*/
+    public float jumpDistance = 10f;
     public float jumpChargeRate = 2f;
 
     public Transform groundCheck;
@@ -19,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 velocity;
     private bool isGrounded;
+    private bool isJumping;
     private float jumpHeight = 0f;
 
     // Start is called before the first frame update
@@ -32,21 +36,15 @@ public class PlayerMovement : MonoBehaviour
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-        }
-
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-        
-        // Apply horizontal and vertical motion
-        Vector3 move = transform.right * x + transform.forward * z;
-        controller.Move(move * speed * Time.deltaTime);
-
         // Jump behavior
         if (isGrounded)
         {
+            if (velocity.y < 0f)
+            {
+                velocity.y = -2f;
+                isJumping = false;
+            }
+
             // Holding the jump button
             if (Input.GetButton("Jump"))
             {
@@ -67,9 +65,28 @@ public class PlayerMovement : MonoBehaviour
                 {
                     jumpHeight += minJumpHeight;
                     velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-                    jumpHeight = 0;
+                    velocity.x = jumpDistance * transform.forward.x;
+                    velocity.z = jumpDistance * transform.forward.z;
+                    jumpHeight = 0f;
+                }
+                else
+                {
+                    velocity.x = 0;
+                    velocity.z = 0;
                 }
             }
+            // Player must be jumping if jumpHeight or y velocity is greater than 0
+            isJumping = jumpHeight > 0f || velocity.y > 0;
+        }
+
+        // Apply horizontal and vertical motion
+        if (!isJumping)
+        {
+            float x = Input.GetAxis("Horizontal");
+            float z = Input.GetAxis("Vertical");
+
+            Vector3 move = transform.right * x + transform.forward * z;
+            controller.Move(move * speed * Time.deltaTime);
         }
 
         // Apply gravity
