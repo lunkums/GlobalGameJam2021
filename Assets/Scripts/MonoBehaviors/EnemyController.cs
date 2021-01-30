@@ -7,11 +7,11 @@ public class EnemyController : MonoBehaviour
 {
     public float lookRadius = 10f;
 
-    private Transform target;
-    private NavMeshAgent agent;
-    private State state;
+    protected Transform target;
+    protected NavMeshAgent agent;
+    protected State state;
 
-    private enum State
+    public enum State
     {
         IDLE,
         PATROL,
@@ -19,47 +19,27 @@ public class EnemyController : MonoBehaviour
         ATTACK
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void Idle()
     {
-        target = PlayerManager.instance.player.transform;
-        agent = GetComponent<NavMeshAgent>();
-        state = State.IDLE;
+        Debug.Log("Enemy State: [IDLE]");
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Patrol()
     {
-        float distance = Vector3.Distance(target.position, transform.position);
+        Debug.Log("Enemy State: [PATROL]");
+    }
 
-        if (distance <= lookRadius)
-        {
-            agent.SetDestination(target.position);
+    public void Chase()
+    {
+        agent.SetDestination(target.position);
+        Debug.Log("Enemy State: [CHASE]");
+    }
 
-            if (distance <= agent.stoppingDistance)
-            {
-                FaceTarget();
-            }
-        }
-
-        switch (state)
-        {
-            case State.IDLE:
-                // Idle
-                break;
-            case State.PATROL:
-                // Patrol
-                break;
-            case State.CHASE:
-                // Chase
-                break;
-            case State.ATTACK:
-                // Attack
-                break;
-            default:
-                // Do nothing
-                break;
-        }
+    public void Attack()
+    {
+        Debug.Log("Enemy State: [ATTACK]");
+        FaceTarget();
+        Destroy(PlayerManager.instance.player);
     }
 
     private void FaceTarget()
