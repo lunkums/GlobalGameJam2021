@@ -12,7 +12,10 @@ TagManager:
   - Water
   - UI
   - Ground
+<<<<<<< HEAD
   - Player
+  - Furniture
+=======
   - Furniture
   - 
 >>>>>>> 5a32542f43ea9355d96e832caf07af4862327950
