@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class EnemyBehaviors : EnemyController
 {
-<<<<<<< Updated upstream
     // Update is called once per frame
     void Update()
     {
@@ -16,11 +15,13 @@ public class EnemyBehaviors : EnemyController
             if (distance <= agent.stoppingDistance)
             {
                 state = State.ATTACK;
-            } else
+            }
+            else
             {
                 state = State.CHASE;
             }
-        } else
+        }
+        else
         {
             state = State.PATROL;
 
@@ -48,31 +49,5 @@ public class EnemyBehaviors : EnemyController
                 // Do nothing
                 break;
         }
-=======
-    protected Transform target;
-    protected GameObject player;
-    protected NavMeshAgent agent;
-
-    public void Idle()
-    {
-        print("Enemy State = IDLE");
-    }
-
-    public void Chase()
-    {
-        print("Enemy State = CHASE");
-        agent.SetDestination(target.position);
-    }
-
-    public void Patrol()
-    {
-        print("Enemy State = PATROL");
-    }
-
-    public void Attack()
-    {
-        print("Enemy State = ATTACK");
-        Destroy(player);
->>>>>>> Stashed changes
     }
 }

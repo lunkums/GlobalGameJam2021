@@ -3,18 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : EnemyBehaviors
+public class EnemyController : MonoBehaviour
 {
-<<<<<<< Updated upstream
     // State enum
     public enum State
-=======
-    public float lookRadius = 10f;
-
-    private State state;
-
-    private enum State
->>>>>>> Stashed changes
     {
         IDLE,
         PATROL,
@@ -40,13 +32,8 @@ public class EnemyController : EnemyBehaviors
     // Start is called before the first frame update
     void Start()
     {
-<<<<<<< Updated upstream
         waypointIndex = 0;
         target = PlayerManager.instance.player.transform;
-=======
-        player = PlayerManager.instance.player;
-        target = player.transform;
->>>>>>> Stashed changes
         agent = GetComponent<NavMeshAgent>();
         state = State.IDLE;
         animator = GetComponent<Animator>();
@@ -54,48 +41,7 @@ public class EnemyController : EnemyBehaviors
 
     private void SetDestination(Vector3 destination)
     {
-<<<<<<< Updated upstream
         agent.SetDestination(destination);
-=======
-        float distance = Vector3.Distance(target.position, transform.position);
-
-        if (distance <= lookRadius)
-        {
-            if (distance <= agent.stoppingDistance)
-            {
-                state = State.ATTACK;
-            } else
-            {
-                state = State.CHASE;
-            }
-        } else
-        {
-            state = State.PATROL;
-        }
-
-        switch (state)
-        {
-            case State.IDLE:
-                // Idle
-                Idle();
-                break;
-            case State.PATROL:
-                // Patrol
-                Patrol();
-                break;
-            case State.CHASE:
-                // Chase
-                Chase();
-                break;
-            case State.ATTACK:
-                // Attack
-                Attack();
-                break;
-            default:
-                // Do nothing
-                break;
-        }
->>>>>>> Stashed changes
     }
 
     private void FaceTarget()
