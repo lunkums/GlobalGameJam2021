@@ -16,5 +16,28 @@ public class PlayerManager : MonoBehaviour
     #endregion
 
     public GameObject player;
+    public GameObject cheese;
+    public GameObject completeLevelUI;
+    public GameObject failLevelUI;
 
+    private bool gameHasEnded = false;
+
+    public void EndGame(bool hasWon)
+    {
+        if (!gameHasEnded)
+        {
+            gameHasEnded = true;
+
+            if (hasWon)
+            {
+                completeLevelUI.SetActive(true);
+                Debug.Log("You win!");
+            }
+            else
+            {
+                failLevelUI.SetActive(true);
+                Debug.Log("You lose!");
+            }
+        }
+    }
 }

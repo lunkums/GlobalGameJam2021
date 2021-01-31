@@ -14,8 +14,11 @@ public class EnemyController : MonoBehaviour
         ATTACK
     }
 
-    public float lookRadius = 10f;
+    public float walkSpeed = 25f;
+    public float runSpeed = 50f;
+    public float lookRadius = 100f;
     public Transform[] waypoints;
+    public bool debugOn = false;
 
     protected Transform target;
     protected NavMeshAgent agent;
@@ -54,33 +57,43 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, lookRadius);
     }
 
+    private void Log(string message)
+    {
+        if (debugOn)
+        {
+            Debug.Log(message);
+        }
+    }
+
     // Public methods
 
     public void Idle()
     {
         animator.Play("Sit");
-        Debug.Log("Enemy State: [IDLE]");
+        Log("Enemy State: [IDLE]");
     }
 
     public void Patrol()
     {
+        agent.speed = walkSpeed;
         animator.Play("Walk");
         SetDestination(waypoints[waypointIndex].position);
-        Debug.Log("Enemy State: [PATROL]");
+        Log("Enemy State: [PATROL]");
     }
 
     public void Chase()
     {
+        agent.speed = runSpeed;
         animator.Play("Run");
         SetDestination(target.position);
-        Debug.Log("Enemy State: [CHASE]");
+        Log("Enemy State: [CHASE]");
     }
 
     public void Attack()
     {
         FaceTarget();
-        Destroy(PlayerManager.instance.player);
-        Debug.Log("Enemy State: [ATTACK]");
+        PlayerManager.instance.EndGame(false);
+        Log("Enemy State: [ATTACK]");
     }
 
     public void IncreaseIndex()
