@@ -6,6 +6,6 @@ public class PlayerController : MonoBehaviour
 {
     private void OnDestroy()
     {
-        print("Player has been destroyed.");
+        Debug.Log("Player has been destroyed.");
     }
 }

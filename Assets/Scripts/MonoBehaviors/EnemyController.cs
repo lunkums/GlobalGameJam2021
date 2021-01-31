@@ -5,12 +5,7 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
-    public float lookRadius = 10f;
-
-    protected Transform target;
-    protected NavMeshAgent agent;
-    protected State state;
-
+    // State enum
     public enum State
     {
         IDLE,
@@ -19,27 +14,31 @@ public class EnemyController : MonoBehaviour
         ATTACK
     }
 
-    public void Idle()
+    public float lookRadius = 10f;
+    public Transform[] waypoints;
+
+    protected Transform target;
+    protected NavMeshAgent agent;
+    protected State state;
+    protected int waypointIndex;
+
+    private Animator animator;
+
+    // Private methods
+
+    // Start is called before the first frame update
+    void Start()
     {
-        Debug.Log("Enemy State: [IDLE]");
+        waypointIndex = 0;
+        target = PlayerManager.instance.player.transform;
+        agent = GetComponent<NavMeshAgent>();
+        state = State.IDLE;
+        animator = GetComponent<Animator>();
     }
 
-    public void Patrol()
+    private void SetDestination(Vector3 destination)
     {
-        Debug.Log("Enemy State: [PATROL]");
-    }
-
-    public void Chase()
-    {
-        agent.SetDestination(target.position);
-        Debug.Log("Enemy State: [CHASE]");
-    }
-
-    public void Attack()
-    {
-        Debug.Log("Enemy State: [ATTACK]");
-        FaceTarget();
-        Destroy(PlayerManager.instance.player);
+        agent.SetDestination(destination);
     }
 
     private void FaceTarget()
@@ -53,5 +52,43 @@ public class EnemyController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, lookRadius);
+    }
+
+    // Public methods
+
+    public void Idle()
+    {
+        animator.Play("Sit");
+        Debug.Log("Enemy State: [IDLE]");
+    }
+
+    public void Patrol()
+    {
+        animator.Play("Walk");
+        SetDestination(waypoints[waypointIndex].position);
+        Debug.Log("Enemy State: [PATROL]");
+    }
+
+    public void Chase()
+    {
+        animator.Play("Run");
+        SetDestination(target.position);
+        Debug.Log("Enemy State: [CHASE]");
+    }
+
+    public void Attack()
+    {
+        FaceTarget();
+        Destroy(PlayerManager.instance.player);
+        Debug.Log("Enemy State: [ATTACK]");
+    }
+
+    public void IncreaseIndex()
+    {
+        waypointIndex++;
+        if (waypointIndex >= waypoints.Length)
+        {
+            waypointIndex = 0;
+        }
     }
 }

@@ -5,14 +5,6 @@ using UnityEngine.AI;
 
 public class EnemyBehaviors : EnemyController
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        target = PlayerManager.instance.player.transform;
-        agent = GetComponent<NavMeshAgent>();
-        state = State.IDLE;
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -29,7 +21,12 @@ public class EnemyBehaviors : EnemyController
             }
         } else
         {
-            state = State.IDLE;
+            state = State.PATROL;
+
+            if (Vector3.Distance(waypoints[waypointIndex].position, transform.position) <= agent.stoppingDistance)
+            {
+                IncreaseIndex();
+            }
         }
 
         switch (state)
